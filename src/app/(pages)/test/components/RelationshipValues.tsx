@@ -28,9 +28,11 @@ interface RelationshipValuesProps {
   onChange: (value: Record<string, number>) => void;
   onSubmit: () => void;
   onBack: () => void;
+  isSubmitting: boolean;
+  error: string;
 }
 
-export function RelationshipValues({ value, onChange, onSubmit, onBack }: RelationshipValuesProps) {
+export function RelationshipValues({ value, onChange, onSubmit, onBack, isSubmitting, error }: RelationshipValuesProps) {
   const handleChange = (questionId: string, score: number) => {
     onChange({ ...value, [questionId]: score });
   };
@@ -67,6 +69,7 @@ export function RelationshipValues({ value, onChange, onSubmit, onBack }: Relati
       <div className="mt-8 flex justify-between gap-4">
         <button
           onClick={onBack}
+          disabled={isSubmitting}
           className="border-2 border-[var(--ink)] px-6 py-3 font-black transition hover:bg-[var(--ink)] hover:text-white"
         >
           上一步
@@ -75,12 +78,19 @@ export function RelationshipValues({ value, onChange, onSubmit, onBack }: Relati
         {isComplete && (
           <button
             onClick={onSubmit}
-            className="bg-[var(--coral)] px-6 py-3 font-black text-[var(--ink)] shadow-[6px_6px_0_var(--aqua)] transition hover:-translate-y-1"
+            disabled={isSubmitting}
+            className="bg-[var(--coral)] px-6 py-3 font-black text-[var(--ink)] shadow-[6px_6px_0_var(--aqua)] transition hover:-translate-y-1 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0"
           >
-            提交测试
+            {isSubmitting ? 'DeepSeek 分析中...' : '提交测试'}
           </button>
         )}
       </div>
+
+      {error && (
+        <div className="border-2 border-[var(--coral)] bg-white p-4 text-sm font-bold leading-7 text-[var(--coral)]">
+          {error}
+        </div>
+      )}
     </div>
   );
 } 

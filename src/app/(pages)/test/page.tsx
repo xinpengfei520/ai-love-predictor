@@ -2,11 +2,12 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
+import { AnalysisResult } from './components/AnalysisResult';
 import { BasicInfoForm } from './components/BasicInfoForm';
 import { PersonalityTest } from './components/PersonalityTest';
 import { ProgressBar } from './components/ProgressBar';
 import { RelationshipValues } from './components/RelationshipValues';
-import type { TestState } from './types';
+import type { LoveAnalysisResult, TestState } from './types';
 
 const steps = [
   {
@@ -26,20 +27,67 @@ const steps = [
   }
 ];
 
-export default function TestPage() {
-  const [state, setState] = useState<TestState>({
-    currentStep: 1,
-    basicInfo: {
-      age: 0,
-      gender: 'male'
-    },
-    personalityTest: {
-      answers: {}
-    },
-    relationshipValues: {}
-  });
+const initialState: TestState = {
+  currentStep: 1,
+  basicInfo: {
+    age: 0,
+    gender: 'male'
+  },
+  personalityTest: {
+    answers: {}
+  },
+  relationshipValues: {}
+};
 
-  const progress = (state.currentStep / steps.length) * 100;
+export default function TestPage() {
+  const [state, setState] = useState<TestState>(initialState);
+  const [analysisResult, setAnalysisResult] = useState<LoveAnalysisResult | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState('');
+
+  const progress = analysisResult ? 100 : (state.currentStep / steps.length) * 100;
+  const currentTitle = analysisResult ? '测试结果' : steps[state.currentStep - 1].title;
+  const currentDescription = analysisResult ? 'DeepSeek 已生成你的情感关系偏好报告' : steps[state.currentStep - 1].description;
+
+  const handleSubmit = async () => {
+    setIsSubmitting(true);
+    setSubmitError('');
+
+    try {
+      const response = await fetch('/api/analyze', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          basicInfo: {
+            age: state.basicInfo.age,
+            gender: state.basicInfo.gender,
+          },
+          personalityAnswers: state.personalityTest.answers,
+          relationshipValues: state.relationshipValues,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || '提交测试失败，请稍后重试');
+      }
+
+      setAnalysisResult(data.result);
+    } catch (error) {
+      setSubmitError(error instanceof Error ? error.message : '提交测试失败，请稍后重试');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleRestart = () => {
+    setState(initialState);
+    setAnalysisResult(null);
+    setSubmitError('');
+  };
 
   return (
     <div className="min-h-screen overflow-hidden bg-[var(--ink)] text-[var(--paper)]">
@@ -94,18 +142,22 @@ export default function TestPage() {
             <div className="mb-8 flex flex-col justify-between gap-4 border-b border-[var(--ink)]/12 pb-6 md:flex-row md:items-end">
               <div>
                 <p className="text-xs font-black uppercase tracking-[0.22em] text-[var(--coral)]">
-                  Step 0{state.currentStep}
+                  {analysisResult ? 'Result' : `Step 0${state.currentStep}`}
                 </p>
                 <h2 className="mt-3 text-3xl font-black md:text-5xl">
-                  {steps[state.currentStep - 1].title}
+                  {currentTitle}
                 </h2>
               </div>
               <p className="max-w-sm text-sm leading-7 text-[var(--muted)]">
-                {steps[state.currentStep - 1].description}
+                {currentDescription}
               </p>
             </div>
 
-          {state.currentStep === 1 && (
+          {analysisResult && (
+            <AnalysisResult result={analysisResult} onRestart={handleRestart} />
+          )}
+
+          {!analysisResult && state.currentStep === 1 && (
             <BasicInfoForm 
               value={state.basicInfo}
               onChange={(basicInfo) => setState(prev => ({ ...prev, basicInfo }))}
@@ -113,7 +165,7 @@ export default function TestPage() {
             />
           )}
 
-          {state.currentStep === 2 && (
+          {!analysisResult && state.currentStep === 2 && (
             <PersonalityTest
               value={state.personalityTest}
               onChange={(personalityTest) => setState(prev => ({ ...prev, personalityTest }))}
@@ -122,12 +174,14 @@ export default function TestPage() {
             />
           )}
 
-            {state.currentStep === 3 && (
+            {!analysisResult && state.currentStep === 3 && (
               <RelationshipValues
                 value={state.relationshipValues}
                 onChange={(relationshipValues) => setState(prev => ({ ...prev, relationshipValues }))}
-                onSubmit={() => alert('测试已完成，结果页功能开发中')}
+                onSubmit={handleSubmit}
                 onBack={() => setState(prev => ({ ...prev, currentStep: prev.currentStep - 1 }))}
+                isSubmitting={isSubmitting}
+                error={submitError}
               />
             )}
           </div>

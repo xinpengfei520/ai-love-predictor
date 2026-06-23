@@ -20,3 +20,17 @@ export interface TestState {
   personalityTest: PersonalityTest;
   relationshipValues: Record<string, number>;
 }
+
+export interface LoveAnalysisResult {
+  score: number;
+  profileTitle: string;
+  summary: string;
+  dimensions: Array<{
+    name: string;
+    score: number;
+    insight: string;
+  }>;
+  strengths: string[];
+  risks: string[];
+  suggestions: string[];
+}
