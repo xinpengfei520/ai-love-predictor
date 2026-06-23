@@ -14,16 +14,14 @@ interface AnalysisResultProps {
 export function AnalysisResult({ result, nickname, onRestart }: AnalysisResultProps) {
   const reportRef = useRef<HTMLDivElement>(null);
   const [qrCodeUrl, setQrCodeUrl] = useState('');
-  const [testUrl, setTestUrl] = useState('');
   const [isDownloading, setIsDownloading] = useState(false);
   const displayName = nickname || '你';
 
   useEffect(() => {
     const url = `${window.location.origin}/test`;
-    setTestUrl(url);
 
     QRCode.toDataURL(url, {
-      width: 320,
+      width: 220,
       margin: 1,
       color: {
         dark: '#14181e',
@@ -99,24 +97,15 @@ export function AnalysisResult({ result, nickname, onRestart }: AnalysisResultPr
           <ResultList title="行动建议" items={result.suggestions} />
         </div>
 
-        <div className="grid gap-5 border-2 border-[var(--ink)] bg-white p-5 md:grid-cols-[1fr_160px] md:items-center">
+        <div className="flex flex-col items-center justify-center gap-3 border border-[var(--ink)]/18 bg-white px-5 py-6 text-center">
           <div>
-            <p className="text-xs font-black uppercase tracking-[0.2em] text-[var(--coral)]">Share test</p>
-            <h3 className="mt-3 text-2xl font-black">扫码生成你的情感画像</h3>
-            <p className="mt-3 max-w-xl text-sm leading-7 text-[var(--muted)]">
-              这份报告可以保存分享；二维码会带朋友回到测试页，重新生成属于他们自己的 AI 情感分析报告。
-            </p>
-            {testUrl && (
-              <p className="mt-4 break-all border-l-4 border-[var(--aqua)] pl-3 text-xs font-bold leading-6 text-[var(--muted)]">
-                {testUrl}
-              </p>
-            )}
+            <h3 className="text-lg font-black">扫码生成你的情感画像</h3>
           </div>
           {qrCodeUrl && (
-            <div className="mx-auto border border-[var(--ink)] bg-[#f8f1e6] p-3">
+            <div className="border border-[var(--ink)] bg-[#f8f1e6] p-2">
               {/* QRCode returns a client-generated data URL, so next/image is not useful here. */}
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={qrCodeUrl} alt="测试页面二维码" className="h-32 w-32" />
+              <img src={qrCodeUrl} alt="测试页面二维码" className="h-24 w-24" />
             </div>
           )}
         </div>
