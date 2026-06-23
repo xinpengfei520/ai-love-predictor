@@ -18,4 +18,5 @@ export interface TestState {
   currentStep: number;
   basicInfo: BasicInfo;
   personalityTest: PersonalityTest;
-} 
+  relationshipValues: Record<string, number>;
+}

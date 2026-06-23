@@ -3,19 +3,47 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f8f1e6;
+  --foreground: #14181e;
+  --ink: #14181e;
+  --paper: #f8f1e6;
+  --coral: #ff6d5c;
+  --aqua: #62e5d2;
+  --muted: #68706f;
+  --font-display: "Songti SC", "Noto Serif SC", "STSong", Georgia, serif;
+  --font-body: "Avenir Next", "PingFang SC", "Hiragino Sans GB", sans-serif;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #14181e;
+    --foreground: #f8f1e6;
   }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--ink);
+  scroll-behavior: smooth;
 }
 
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-body);
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  letter-spacing: 0;
+}
+
+::selection {
+  background: var(--aqua);
+  color: var(--ink);
 }

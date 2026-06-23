@@ -4,9 +4,9 @@ interface ProgressBarProps {
 
 export function ProgressBar({ progress }: ProgressBarProps) {
   return (
-    <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
-      <div 
-        className="bg-gradient-to-r from-pink-500 to-purple-500 h-2.5 rounded-full transition-all duration-300"
+    <div className="h-3 w-full border border-white/12 bg-white/10 p-0.5">
+      <div
+        className="h-full bg-[linear-gradient(90deg,var(--aqua),var(--coral))] transition-all duration-500"
         style={{ width: `${progress}%` }}
       />
     </div>

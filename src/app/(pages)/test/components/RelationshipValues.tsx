@@ -40,34 +40,34 @@ export function RelationshipValues({ value, onChange, onSubmit, onBack }: Relati
   return (
     <div className="space-y-8">
       {questions.map((question) => (
-        <div key={question.id} className="space-y-4">
-          <h3 className="text-lg font-medium">{question.text}</h3>
-          <div className="flex justify-between items-center gap-4">
-            <span className="text-sm text-gray-500">完全不同意</span>
-            <div className="flex gap-2">
+        <div key={question.id} className="border border-[var(--ink)]/12 bg-white p-4">
+          <h3 className="text-lg font-black">{question.text}</h3>
+          <div className="mt-5 grid gap-3 md:grid-cols-[88px_1fr_72px] md:items-center">
+            <span className="text-xs font-bold text-[var(--muted)]">完全不同意</span>
+            <div className="grid grid-cols-5 gap-2">
               {[1, 2, 3, 4, 5].map((score) => (
                 <button
                   key={score}
                   onClick={() => handleChange(question.id, score)}
-                  className={`w-10 h-10 rounded-full ${
+                  className={`h-11 border-2 font-black transition hover:-translate-y-0.5 ${
                     value[question.id] === score
-                      ? 'bg-pink-500 text-white'
-                      : 'border hover:bg-pink-50 dark:hover:bg-pink-900'
+                      ? 'border-[var(--ink)] bg-[var(--ink)] text-white shadow-[4px_4px_0_var(--coral)]'
+                      : 'border-[var(--ink)]/16 bg-[#f8f1e6] hover:border-[var(--ink)]'
                   }`}
                 >
                   {score}
                 </button>
               ))}
             </div>
-            <span className="text-sm text-gray-500">完全同意</span>
+            <span className="text-xs font-bold text-[var(--muted)] md:text-right">完全同意</span>
           </div>
         </div>
       ))}
 
-      <div className="flex justify-between mt-8">
+      <div className="mt-8 flex justify-between gap-4">
         <button
           onClick={onBack}
-          className="px-6 py-2 border rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700"
+          className="border-2 border-[var(--ink)] px-6 py-3 font-black transition hover:bg-[var(--ink)] hover:text-white"
         >
           上一步
         </button>
@@ -75,7 +75,7 @@ export function RelationshipValues({ value, onChange, onSubmit, onBack }: Relati
         {isComplete && (
           <button
             onClick={onSubmit}
-            className="px-6 py-2 bg-gradient-to-r from-pink-500 to-purple-500 text-white rounded-lg hover:from-pink-600 hover:to-purple-600"
+            className="bg-[var(--coral)] px-6 py-3 font-black text-[var(--ink)] shadow-[6px_6px_0_var(--aqua)] transition hover:-translate-y-1"
           >
             提交测试
           </button>

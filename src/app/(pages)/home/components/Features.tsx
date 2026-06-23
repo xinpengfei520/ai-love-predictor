@@ -1,38 +1,53 @@
 export function Features() {
   const features = [
     {
-      title: '智能匹配',
-      description: '基于AI的多维度分析，准确预测情感契合度',
-      icon: '🤖'
+      title: '多维信号采样',
+      description: '从基本信息、性格倾向和关系价值观中提取稳定特征，避免只看单一标签。',
+      metric: '03'
     },
     {
-      title: '专业建议',
-      description: '提供个性化的情感建议和关系维护指导',
-      icon: '💡'
+      title: '情感模式归因',
+      description: '把测试答案转译成沟通节奏、亲密需求、独立空间等更容易行动的指标。',
+      metric: '12'
     },
     {
-      title: '趣味测试',
-      description: '轻松有趣的测试过程，即刻获得分析结果',
-      icon: '✨'
+      title: '轻量即时反馈',
+      description: '流程保持短、清楚、有节奏，让用户愿意完成测试，而不是被问卷消耗。',
+      metric: '3m'
     }
   ];
 
   return (
-    <section className="py-20 bg-white dark:bg-gray-900">
-      <div className="container mx-auto px-4">
-        <h2 className="text-3xl font-bold text-center mb-12">
-          为什么选择我们
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+    <section className="bg-[var(--paper)] px-5 py-20 text-[var(--ink)] md:px-8">
+      <div className="mx-auto max-w-7xl">
+        <div className="grid gap-8 border-y border-[var(--ink)]/15 py-10 md:grid-cols-[0.75fr_1.25fr] md:items-end">
+          <div>
+            <p className="text-xs font-black uppercase tracking-[0.22em] text-[var(--coral)]">Why it works</p>
+            <h2 className="mt-4 text-4xl font-black leading-tight md:text-6xl">
+              不是玄学包装，
+              <span className="block">是可读的关系线索。</span>
+            </h2>
+          </div>
+          <p className="max-w-2xl text-lg leading-8 text-[var(--muted)]">
+            这个产品的重点不是给爱情下绝对结论，而是帮助用户看见自己的相处偏好。界面也应该像一个可靠的分析工具：有温度，但不轻浮。
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 gap-px bg-[var(--ink)]/12 md:grid-cols-3">
           {features.map((feature, index) => (
-            <div 
-              key={index}
-              className="p-6 bg-pink-50 dark:bg-pink-950 rounded-lg hover:shadow-lg transition-shadow duration-200"
+            <article
+              key={feature.title}
+              className="group min-h-[300px] bg-[var(--paper)] p-6 transition duration-300 hover:bg-[#f5efe4] md:p-8"
             >
-              <div className="text-4xl mb-4">{feature.icon}</div>
-              <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
-              <p className="text-gray-600 dark:text-gray-300">{feature.description}</p>
-            </div>
+              <div className="flex items-start justify-between gap-4">
+                <span className="text-sm font-black text-[var(--muted)]">0{index + 1}</span>
+                <span className="border border-[var(--ink)] px-3 py-2 text-2xl font-black leading-none text-[var(--coral)] transition group-hover:-translate-y-1 group-hover:bg-[var(--ink)] group-hover:text-[var(--aqua)]">
+                  {feature.metric}
+                </span>
+              </div>
+              <h3 className="mt-20 text-2xl font-black">{feature.title}</h3>
+              <p className="mt-4 text-base leading-7 text-[var(--muted)]">{feature.description}</p>
+            </article>
           ))}
         </div>
       </div>

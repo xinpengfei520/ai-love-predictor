@@ -53,41 +53,49 @@ export function PersonalityTest({ value, onChange, onNext, onBack }: Personality
 
   return (
     <div className="space-y-8">
-      <div className="text-center mb-8">
-        <p className="text-sm text-gray-500 dark:text-gray-400">
+      <div className="mb-8 flex items-center justify-between border border-[var(--ink)]/12 bg-white p-4">
+        <p className="text-sm font-black text-[var(--muted)]">
           问题 {currentQuestion + 1} / {questions.length}
         </p>
+        <div className="flex gap-1">
+          {questions.map((question, index) => (
+            <span
+              key={question.id}
+              className={`h-2 w-8 ${index <= currentQuestion ? 'bg-[var(--coral)]' : 'bg-[var(--ink)]/12'}`}
+            />
+          ))}
+        </div>
       </div>
 
-      <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
-        <h3 className="text-xl mb-6">{questions[currentQuestion].text}</h3>
+      <div className="border-2 border-[var(--ink)] bg-white p-5 shadow-[10px_10px_0_rgba(20,24,30,.14)] md:p-7">
+        <h3 className="text-2xl font-black leading-snug">{questions[currentQuestion].text}</h3>
         
-        <div className="grid grid-cols-5 gap-2">
+        <div className="mt-8 grid grid-cols-5 gap-2 md:gap-3">
           {[1, 2, 3, 4, 5].map((score) => (
             <button
               key={score}
               onClick={() => handleAnswer(score)}
-              className={`p-4 rounded-lg border ${
+              className={`aspect-square border-2 text-xl font-black transition hover:-translate-y-1 ${
                 value.answers[questions[currentQuestion].id] === score
-                  ? 'bg-pink-500 text-white'
-                  : 'hover:bg-pink-50 dark:hover:bg-pink-900'
+                  ? 'border-[var(--ink)] bg-[var(--ink)] text-white shadow-[5px_5px_0_var(--coral)]'
+                  : 'border-[var(--ink)]/18 bg-[#f8f1e6] hover:border-[var(--ink)] hover:bg-[var(--aqua)]/20'
               }`}
             >
               {score}
             </button>
           ))}
         </div>
-        <div className="text-center mt-4">
-          <p className="text-sm text-gray-500">
+        <div className="mt-5 flex justify-between text-xs font-bold uppercase tracking-[0.08em] text-[var(--muted)]">
+          <p>
             1 = 完全不同意，5 = 完全同意
           </p>
         </div>
       </div>
 
-      <div className="flex justify-between mt-8">
+      <div className="mt-8 flex justify-between gap-4">
         <button
           onClick={onBack}
-          className="px-6 py-2 border rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700"
+          className="border-2 border-[var(--ink)] px-6 py-3 font-black transition hover:bg-[var(--ink)] hover:text-white"
         >
           上一步
         </button>
@@ -95,7 +103,7 @@ export function PersonalityTest({ value, onChange, onNext, onBack }: Personality
         {isComplete && (
           <button
             onClick={onNext}
-            className="px-6 py-2 bg-gradient-to-r from-pink-500 to-purple-500 text-white rounded-lg hover:from-pink-600 hover:to-purple-600"
+            className="bg-[var(--coral)] px-6 py-3 font-black text-[var(--ink)] shadow-[6px_6px_0_var(--aqua)] transition hover:-translate-y-1"
           >
             下一步
           </button>
