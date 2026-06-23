@@ -81,7 +81,7 @@ export function RelationshipValues({ value, onChange, onSubmit, onBack, isSubmit
             disabled={isSubmitting}
             className="bg-[var(--coral)] px-6 py-3 font-black text-[var(--ink)] shadow-[6px_6px_0_var(--aqua)] transition hover:-translate-y-1 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0"
           >
-            {isSubmitting ? 'DeepSeek 分析中...' : '提交测试'}
+            {isSubmitting ? 'AI分析中...' : '提交测试'}
           </button>
         )}
       </div>

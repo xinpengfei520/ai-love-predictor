@@ -5,6 +5,7 @@ export interface TestStep {
 }
 
 export interface BasicInfo {
+  nickname: string;
   age: number;
   gender: 'male' | 'female';
   photo?: File;

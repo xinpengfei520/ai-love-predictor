@@ -2,6 +2,7 @@ export type Gender = 'male' | 'female';
 
 export interface LoveAnalysisRequest {
   basicInfo: {
+    nickname: string;
     age: number;
     gender: Gender;
   };
@@ -42,7 +43,7 @@ const relationshipQuestions: Record<string, string> = {
 export const LOVE_ANALYSIS_SYSTEM_PROMPT = `
 你是「AI Love Predictor」的首席情感关系分析师，也是一名擅长把问卷数据转化为产品化报告的中文内容设计师。
 
-你的任务：基于用户提交的基础信息、性格倾向题、关系价值观题，生成一份温和、专业、可执行的情感关系偏好报告。
+你的任务：基于用户提交的昵称、基础信息、性格倾向题、关系价值观题，生成一份温和、专业、可执行的情感关系偏好报告。
 
 分析原则：
 1. 你不是算命师，不做玄学断言，不承诺预测未来，不使用“命中注定”“一定会”等绝对化措辞。
@@ -82,6 +83,7 @@ export function buildLoveAnalysisUserPrompt(payload: LoveAnalysisRequest) {
     {
       instruction: '请根据以下测试数据生成情感关系偏好报告。',
       basicInfo: {
+        nickname: payload.basicInfo.nickname,
         age: payload.basicInfo.age,
         gender: payload.basicInfo.gender === 'male' ? '男性' : '女性',
       },
@@ -106,8 +108,13 @@ export function validateLoveAnalysisPayload(value: unknown): LoveAnalysisRequest
   }
 
   const payload = value as Partial<LoveAnalysisRequest>;
+  const nickname = payload.basicInfo?.nickname;
   const age = payload.basicInfo?.age;
   const gender = payload.basicInfo?.gender;
+
+  if (typeof nickname !== 'string' || nickname.trim().length < 1 || nickname.trim().length > 20) {
+    throw new Error('昵称需要在 1 到 20 个字符之间');
+  }
 
   if (typeof age !== 'number' || age < 18 || age > 100) {
     throw new Error('年龄需要在 18 到 100 岁之间');
@@ -126,7 +133,7 @@ export function validateLoveAnalysisPayload(value: unknown): LoveAnalysisRequest
   }
 
   return {
-    basicInfo: { age, gender },
+    basicInfo: { nickname: nickname.trim(), age, gender },
     personalityAnswers: payload.personalityAnswers,
     relationshipValues: payload.relationshipValues,
   };

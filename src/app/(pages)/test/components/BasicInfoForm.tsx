@@ -17,6 +17,10 @@ export function BasicInfoForm({ value, onChange, onNext }: BasicInfoFormProps) {
     
     // 表单验证
     const newErrors: Partial<Record<keyof BasicInfo, string>> = {};
+    const nickname = value.nickname.trim();
+    if (!nickname || nickname.length > 20) {
+      newErrors.nickname = '请输入 1-20 个字符的昵称';
+    }
     if (!value.age || value.age < 18 || value.age > 100) {
       newErrors.age = '请输入有效年龄（18-100岁）';
     }
@@ -34,6 +38,23 @@ export function BasicInfoForm({ value, onChange, onNext }: BasicInfoFormProps) {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-7">
+      <div className="space-y-3">
+        <label className="block text-xs font-black uppercase tracking-[0.18em] text-[var(--muted)]">
+          昵称
+        </label>
+        <input
+          type="text"
+          value={value.nickname}
+          onChange={(e) => onChange({ ...value, nickname: e.target.value })}
+          className="w-full border-2 border-[var(--ink)] bg-white px-5 py-4 text-lg font-bold outline-none transition focus:border-[var(--coral)] focus:shadow-[6px_6px_0_var(--aqua)]"
+          placeholder="请输入您的昵称"
+          maxLength={20}
+        />
+        {errors.nickname && (
+          <p className="text-sm font-bold text-[var(--coral)]">{errors.nickname}</p>
+        )}
+      </div>
+
       <div className="space-y-3">
         <label className="block text-xs font-black uppercase tracking-[0.18em] text-[var(--muted)]">
           年龄

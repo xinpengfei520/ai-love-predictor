@@ -30,6 +30,7 @@ const steps = [
 const initialState: TestState = {
   currentStep: 1,
   basicInfo: {
+    nickname: '',
     age: 0,
     gender: 'male'
   },
@@ -47,7 +48,7 @@ export default function TestPage() {
 
   const progress = analysisResult ? 100 : (state.currentStep / steps.length) * 100;
   const currentTitle = analysisResult ? '测试结果' : steps[state.currentStep - 1].title;
-  const currentDescription = analysisResult ? 'DeepSeek 已生成你的情感关系偏好报告' : steps[state.currentStep - 1].description;
+  const currentDescription = analysisResult ? 'AI 已生成你的情感关系偏好报告' : steps[state.currentStep - 1].description;
 
   const handleSubmit = async () => {
     setIsSubmitting(true);
@@ -61,6 +62,7 @@ export default function TestPage() {
         },
         body: JSON.stringify({
           basicInfo: {
+            nickname: state.basicInfo.nickname.trim(),
             age: state.basicInfo.age,
             gender: state.basicInfo.gender,
           },
@@ -154,7 +156,11 @@ export default function TestPage() {
             </div>
 
           {analysisResult && (
-            <AnalysisResult result={analysisResult} onRestart={handleRestart} />
+            <AnalysisResult
+              result={analysisResult}
+              nickname={state.basicInfo.nickname.trim()}
+              onRestart={handleRestart}
+            />
           )}
 
           {!analysisResult && state.currentStep === 1 && (

@@ -8,7 +8,7 @@ import {
 
 export const runtime = 'nodejs';
 
-interface DeepSeekChatResponse {
+interface AIChatResponse {
   choices?: Array<{
     message?: {
       content?: string;
@@ -22,7 +22,7 @@ export async function POST(request: Request) {
 
     if (!apiKey) {
       return NextResponse.json(
-        { error: 'DeepSeek API Key 未配置，请检查 .env.local' },
+        { error: 'AI API Key 未配置，请检查 .env.local' },
         { status: 500 },
       );
     }
@@ -56,17 +56,17 @@ export async function POST(request: Request) {
     if (!response.ok) {
       const message = await response.text();
       return NextResponse.json(
-        { error: `DeepSeek 分析失败：${message || response.statusText}` },
+        { error: `AI 分析失败：${message || response.statusText}` },
         { status: 502 },
       );
     }
 
-    const data = (await response.json()) as DeepSeekChatResponse;
+    const data = (await response.json()) as AIChatResponse;
     const content = data.choices?.[0]?.message?.content;
 
     if (!content) {
       return NextResponse.json(
-        { error: 'DeepSeek 未返回可解析的分析内容' },
+        { error: 'AI 未返回可解析的分析内容' },
         { status: 502 },
       );
     }

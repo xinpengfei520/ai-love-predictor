@@ -2,10 +2,11 @@ import type { LoveAnalysisResult } from '../types';
 
 interface AnalysisResultProps {
   result: LoveAnalysisResult;
+  nickname: string;
   onRestart: () => void;
 }
 
-export function AnalysisResult({ result, onRestart }: AnalysisResultProps) {
+export function AnalysisResult({ result, nickname, onRestart }: AnalysisResultProps) {
   return (
     <div className="space-y-8">
       <div className="grid gap-5 border-2 border-[var(--ink)] bg-white p-5 shadow-[10px_10px_0_rgba(20,24,30,.14)] md:grid-cols-[180px_1fr] md:p-7">
@@ -15,7 +16,9 @@ export function AnalysisResult({ result, onRestart }: AnalysisResultProps) {
           <span className="text-sm font-bold text-white/58">/ 100</span>
         </div>
         <div>
-          <p className="text-xs font-black uppercase tracking-[0.2em] text-[var(--coral)]">Analysis profile</p>
+          <p className="text-xs font-black uppercase tracking-[0.2em] text-[var(--coral)]">
+            {nickname ? `${nickname} 的情感画像` : 'Analysis profile'}
+          </p>
           <h3 className="mt-3 text-4xl font-black">{result.profileTitle}</h3>
           <p className="mt-5 text-base leading-8 text-[var(--muted)]">{result.summary}</p>
         </div>
