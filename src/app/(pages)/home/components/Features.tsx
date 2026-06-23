@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 export function Features() {
   const features = [
     {
@@ -49,6 +51,27 @@ export function Features() {
               <p className="mt-4 text-base leading-7 text-[var(--muted)]">{feature.description}</p>
             </article>
           ))}
+        </div>
+
+        <div className="mt-16 border-2 border-[var(--ink)] bg-[var(--ink)] p-6 text-[var(--paper)] shadow-[12px_12px_0_var(--coral)] md:p-10">
+          <div className="grid gap-8 md:grid-cols-[1fr_auto] md:items-end">
+            <div>
+              <p className="text-xs font-black uppercase tracking-[0.22em] text-[var(--aqua)]">Ready for your signal</p>
+              <h2 className="mt-4 text-4xl font-black leading-tight md:text-6xl">
+                生成你的
+                <span className="block text-[var(--coral)]">AI 情感画像</span>
+              </h2>
+              <p className="mt-5 max-w-2xl text-base leading-8 text-white/64">
+                三分钟完成测试，得到一份可下载、可分享的高清关系偏好报告。
+              </p>
+            </div>
+            <Link
+              href="/test"
+              className="inline-flex min-h-14 items-center justify-center bg-[var(--aqua)] px-7 text-base font-black text-[var(--ink)] transition hover:-translate-y-1 hover:bg-[var(--coral)]"
+            >
+              立即开始测试 -&gt;
+            </Link>
+          </div>
         </div>
       </div>
     </section>
