@@ -43,6 +43,7 @@ const initialState: TestState = {
 export default function TestPage() {
   const [state, setState] = useState<TestState>(initialState);
   const [analysisResult, setAnalysisResult] = useState<LoveAnalysisResult | null>(null);
+  const [testNumber, setTestNumber] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState('');
 
@@ -77,6 +78,7 @@ export default function TestPage() {
         throw new Error(data.error || '提交测试失败，请稍后重试');
       }
 
+      setTestNumber(await fetchAnnualTestNumber());
       setAnalysisResult(data.result);
     } catch (error) {
       setSubmitError(error instanceof Error ? error.message : '提交测试失败，请稍后重试');
@@ -88,6 +90,7 @@ export default function TestPage() {
   const handleRestart = () => {
     setState(initialState);
     setAnalysisResult(null);
+    setTestNumber('');
     setSubmitError('');
   };
 
@@ -159,6 +162,7 @@ export default function TestPage() {
             <AnalysisResult
               result={analysisResult}
               nickname={state.basicInfo.nickname.trim()}
+              testNumber={testNumber}
               onRestart={handleRestart}
             />
           )}
@@ -196,3 +200,44 @@ export default function TestPage() {
     </div>
   );
 } 
+
+function generateAnnualTestNumber() {
+  const year = new Intl.DateTimeFormat('en-US', {
+    timeZone: 'Asia/Shanghai',
+    year: 'numeric',
+  }).format(new Date());
+  const storageKey = `ai-love-predictor-test-count-${year}`;
+
+  try {
+    const previousCount = Number(window.localStorage.getItem(storageKey) || '0');
+    const nextCount = Number.isFinite(previousCount) ? previousCount + 1 : 1;
+    window.localStorage.setItem(storageKey, String(nextCount));
+
+    return `No.${year}${String(nextCount).padStart(4, '0')}`;
+  } catch {
+    return `No.${year}0001`;
+  }
+}
+
+async function fetchAnnualTestNumber() {
+  try {
+    const response = await fetch('/api/test-number', {
+      method: 'POST',
+      cache: 'no-store',
+    });
+
+    if (!response.ok) {
+      throw new Error('测试编号服务未启用');
+    }
+
+    const data = (await response.json()) as { testNumber?: string };
+
+    if (!data.testNumber) {
+      throw new Error('测试编号返回为空');
+    }
+
+    return data.testNumber;
+  } catch {
+    return generateAnnualTestNumber();
+  }
+}

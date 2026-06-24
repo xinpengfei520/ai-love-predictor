@@ -8,14 +8,16 @@ import type { LoveAnalysisResult } from '../types';
 interface AnalysisResultProps {
   result: LoveAnalysisResult;
   nickname: string;
+  testNumber: string;
   onRestart: () => void;
 }
 
-export function AnalysisResult({ result, nickname, onRestart }: AnalysisResultProps) {
+export function AnalysisResult({ result, nickname, testNumber, onRestart }: AnalysisResultProps) {
   const reportRef = useRef<HTMLDivElement>(null);
   const [qrCodeUrl, setQrCodeUrl] = useState('');
   const [isDownloading, setIsDownloading] = useState(false);
   const displayName = nickname || '你';
+  const displayTestNumber = testNumber || 'No.20260001';
 
   useEffect(() => {
     const url = `${window.location.origin}/test`;
@@ -44,7 +46,7 @@ export function AnalysisResult({ result, nickname, onRestart }: AnalysisResultPr
         backgroundColor: '#f8f1e6',
       });
       const link = document.createElement('a');
-      link.download = `${sanitizeFileName(displayName)}-AI情感分析报告.png`;
+      link.download = `${sanitizeFileName(displayName)}-${displayTestNumber}-AI情感分析报告.png`;
       link.href = dataUrl;
       link.click();
     } finally {
@@ -62,9 +64,15 @@ export function AnalysisResult({ result, nickname, onRestart }: AnalysisResultPr
             <span className="text-sm font-bold text-white/58">/ 100</span>
           </div>
           <div>
-            <p className="text-xs font-black uppercase tracking-[0.2em] text-[var(--coral)]">
-              {`${displayName} 的情感画像`}
-            </p>
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+              <p className="text-xs font-black uppercase tracking-[0.2em] text-[var(--coral)]">
+                {`${displayName} 的情感画像`}
+              </p>
+              <div className="inline-flex w-fit flex-col border border-[var(--ink)] bg-[#f8f1e6] px-3 py-2 text-left shadow-[4px_4px_0_var(--aqua)]">
+                <span className="text-[10px] font-black uppercase tracking-[0.18em] text-[var(--muted)]">Test ID</span>
+                <span className="mt-1 font-black leading-none text-[var(--ink)]">{displayTestNumber}</span>
+              </div>
+            </div>
             <h3 className="mt-3 text-4xl font-black">{result.profileTitle}</h3>
             <p className="mt-5 text-base leading-8 text-[var(--muted)]">{result.summary}</p>
           </div>

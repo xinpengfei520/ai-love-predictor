@@ -1,5 +1,22 @@
 # Home Page Documentation
 
+## 部署环境变量
+
+项目部署到 Vercel 时，需要配置以下环境变量：
+
+```bash
+DEEPSEEK_API_KEY=你的 DeepSeek API Key
+```
+
+如果需要让报告编号在所有用户之间按年份真实累加，还需要创建一个 Upstash Redis，并在 Vercel 中继续添加：
+
+```bash
+UPSTASH_REDIS_REST_URL=你的 Upstash Redis REST URL
+UPSTASH_REDIS_REST_TOKEN=你的 Upstash Redis REST Token
+```
+
+报告编号格式为 `No.年份四位序号`，例如 `No.20260001` 表示 2026 年第 1 次测试。未配置 Upstash Redis 时，页面会使用当前浏览器的本地编号作为兜底，方便本地开发和预览。
+
 ## 目录结构
 ```
 src/app/(pages)/home/
