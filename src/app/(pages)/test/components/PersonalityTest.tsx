@@ -35,21 +35,35 @@ const questions = [
 
 export function PersonalityTest({ value, onChange, onNext, onBack }: PersonalityTestProps) {
   const [currentQuestion, setCurrentQuestion] = useState(0);
+  const currentQuestionId = questions[currentQuestion].id;
+  const hasCurrentAnswer = Object.prototype.hasOwnProperty.call(value.answers, currentQuestionId);
 
   const handleAnswer = (score: number) => {
     const newAnswers = {
       ...value.answers,
-      [questions[currentQuestion].id]: score,
+      [currentQuestionId]: score,
     };
     
     onChange({ answers: newAnswers });
+  };
 
-    if (currentQuestion < questions.length - 1) {
+  const handleBack = () => {
+    if (currentQuestion > 0) {
+      setCurrentQuestion(prev => prev - 1);
+      return;
+    }
+
+    onBack();
+  };
+
+  const handleQuestionNext = () => {
+    if (currentQuestion < questions.length - 1 && hasCurrentAnswer) {
       setCurrentQuestion(prev => prev + 1);
     }
   };
 
   const isComplete = Object.keys(value.answers).length === questions.length;
+  const isLastQuestion = currentQuestion === questions.length - 1;
 
   return (
     <div className="space-y-8">
@@ -73,10 +87,10 @@ export function PersonalityTest({ value, onChange, onNext, onBack }: Personality
         <div className="mt-8 grid grid-cols-5 gap-2 md:gap-3">
           {[1, 2, 3, 4, 5].map((score) => (
             <button
-              key={score}
-              onClick={() => handleAnswer(score)}
-              className={`aspect-square border-2 text-xl font-black transition hover:-translate-y-1 ${
-                value.answers[questions[currentQuestion].id] === score
+                key={score}
+                onClick={() => handleAnswer(score)}
+                className={`aspect-square border-2 text-xl font-black transition hover:-translate-y-1 ${
+                value.answers[currentQuestionId] === score
                   ? 'border-[var(--ink)] bg-[var(--ink)] text-white shadow-[5px_5px_0_var(--coral)]'
                   : 'border-[var(--ink)]/18 bg-[#f8f1e6] hover:border-[var(--ink)] hover:bg-[var(--aqua)]/20'
               }`}
@@ -94,13 +108,23 @@ export function PersonalityTest({ value, onChange, onNext, onBack }: Personality
 
       <div className="mt-8 flex justify-between gap-4">
         <button
-          onClick={onBack}
+          onClick={handleBack}
           className="border-2 border-[var(--ink)] px-6 py-3 font-black transition hover:bg-[var(--ink)] hover:text-white"
         >
           上一步
         </button>
-        
-        {isComplete && (
+
+        {!isLastQuestion && (
+          <button
+            onClick={handleQuestionNext}
+            disabled={!hasCurrentAnswer}
+            className="border-2 border-[var(--ink)] px-6 py-3 font-black transition hover:bg-[var(--ink)] hover:text-white disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-[var(--ink)]"
+          >
+            下一题
+          </button>
+        )}
+
+        {isLastQuestion && isComplete && (
           <button
             onClick={onNext}
             className="bg-[var(--coral)] px-6 py-3 font-black text-[var(--ink)] shadow-[6px_6px_0_var(--aqua)] transition hover:-translate-y-1"
